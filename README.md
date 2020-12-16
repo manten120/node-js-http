@@ -24,3 +24,10 @@ https://intense-river-94256.herokuapp.com/enquetes/rice-bread
 ユーザー名: guest
 パスワード: ps
 
+## heroku へのデプロイ
+
+```console
+git push heroku master:master
+```
+
+補足: `(ローカルの)master:(herokuの)master`
