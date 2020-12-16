@@ -1,15 +1,32 @@
 'use strict';
 const http = require('http');
 const pug = require('pug');
+const auth = require('http-auth');
+
+// https://www.npmjs.com/package/http-auth#custom-authentication
+const basic = auth.basic(
+  { realm: "Enquetes Area." },
+  (username, password, callback) => {
+    callback(username === 'guest' && password === 'ps');
+  });
 
 const server = http
-  .createServer((req, res) => {
+  .createServer(basic, (req, res) => {
     const now = new Date();
     console.info(`[${now}] Requested by ${req.connection.remoteAddress}`);
+    
+    if (req.url === '/logout') {
+      res.writeHead(401, {
+        'Content-Type': 'text/plain; charset=utf-8'
+      });
+      res.end('ログアウトしました');
+      return;
+    }
+    
     res.writeHead(200, {
       'Content-Type': 'text/html; charset=utf-8',
     });
-
+    
     switch (req.method) {
       case 'GET':
         if (req.url === '/enquetes/yaki-shabu') {
@@ -72,3 +89,4 @@ const port = process.env.PORT || 8000;
 server.listen(port, () => {
   console.info('[' + new Date() + '] Listening on ' + port);
 });
+// https://intense-river-94256.herokuapp.com/ | https://git.heroku.com/intense-river-94256.git
